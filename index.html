@@ -1099,28 +1099,31 @@
                     edgeLine.scale.set(1, fbHeight / 12, 1);
                     tMesh.position.y = (fbHeight / 2) + 3.5;
 
-                    if (photoData.url) {
-                        textureLoader.load(
-                            photoData.url, 
-                            (tex) => { 
-                                imgMat.map = tex; 
-                                imgMat.needsUpdate = true; 
-                                
-                                const aspect = tex.image.width / tex.image.height;
-                                let w = 16, h = 16;
-                                if (aspect >= 1) {
-                                    h = 16 / aspect;
-                                } else {
-                                    w = 16 * aspect;
-                                }
-                                
-                                imgMesh.scale.set(w / 16, h / 12, 1);
-                                edgeLine.scale.set(w / 16, h / 12, 1);
-                                tMesh.position.y = (h / 2) + 3.5; 
-                            },
-                            undefined, 
-                            (err) => { console.error("图片加载失败，可能是跨域导致：", err); } 
-                        );
+                   if (photoData.url) {
+                        // 【修改点：加入错峰延迟加载机制，排队加载防止网络塞车】
+                        setTimeout(() => {
+                            textureLoader.load(
+                                photoData.url, 
+                                (tex) => { 
+                                    imgMat.map = tex; 
+                                    imgMat.needsUpdate = true; 
+                                    
+                                    const aspect = tex.image.width / tex.image.height;
+                                    let w = 16, h = 16;
+                                    if (aspect >= 1) {
+                                        h = 16 / aspect;
+                                    } else {
+                                        w = 16 * aspect;
+                                    }
+                                    
+                                    imgMesh.scale.set(w / 16, h / 12, 1);
+                                    edgeLine.scale.set(w / 16, h / 12, 1);
+                                    tMesh.position.y = (h / 2) + 3.5; 
+                                },
+                                undefined, 
+                                (err) => { console.error("图片加载失败：", err); } 
+                            );
+                        }, i * 200); // 核心秘诀：每张照片延迟 200 毫秒依次加载 (i * 200)
                     }
 
                     const hitGeo = new THREE.PlaneGeometry(22, 22);
