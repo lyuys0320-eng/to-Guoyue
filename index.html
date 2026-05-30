@@ -161,7 +161,7 @@
             50% { transform: translate3d(0, -120%, 0); } 
         }
         .animate-credits { 
-            animation: scrollCredits 200s linear infinite; /* 100s保证极慢极平稳 */
+            animation: scrollCredits 250s linear infinite; /* 100s保证极慢极平稳 */
             will-change: transform; 
             transform: translateZ(0); 
             -webkit-backface-visibility: hidden; 
@@ -223,9 +223,9 @@
         <canvas id="universe-canvas"></canvas>
         
         <!-- 被注释掉的提示信息，不再显示 -->
-        <!--  <div id="phase-2-hints" class="universe-hints animate-pulse">
-                     <br>[没想到我们竟然已经认识十年了 ]<br>[有些事没有照片都可能忘了]<br>[儿子一定要幸福，其实不说我也知道你一定会幸福]
-        </div>-->
+         <div id="phase-2-hints" class="universe-hints animate-pulse">
+                     <br>[Loading]<br><!--[有些事没有照片都可能忘了]<br>[儿子一定要幸福，其实不说我也知道你一定会幸福]-->
+        </div>
         
         <div id="next-phase-btn-wrapper" class="next-btn-wrap">
             <button type="button" id="next-phase-btn" class="next-btn">
@@ -258,7 +258,7 @@
         <div class="score-board">
             <h3 class="score-title">接受祝福大挑战</h3>
             <div id="game-score" class="score-num">0</div>
-            <p class="score-tip">魔鬼难度！达到 52000 分解锁终极惊喜（真的是惊喜吗！？）</p>
+            <p class="score-tip">魔鬼难度！达到 52000 分解锁终极惊喜!</p>
         </div>
         <canvas id="game-canvas"></canvas>
     </div>
@@ -273,6 +273,22 @@
                     散发着整个宇宙的光芒
                     帮助朋友找到方向
                     虽然你可能并没有意识到
+
+                    张瑶：
+                    我亲爱的室友，新婚快乐！
+                    一晃毕业这么多年了，本科朝夕相伴的日子好像还历历在目。
+                    我前段时间搬家，还翻出了你在2017、2018年末写给我的卡片，
+                    还有你折的紫色小花（为了不被压扁，我特地放在盒子里的，是不是很用心！），
+                    好怀念那段时光啊。
+                    本科的时候特别羡慕你总是能把生活过得多姿多彩，
+                    参加社团、坚持跳舞，而我空闲时间只会看剧看综艺，
+                    好像曾经一时兴起跟着你去过一次舞蹈课，可惜没坚持下来，
+                    但每次看你站上舞台，都由衷地觉得你闪闪发光，特别美好。
+                    后来读研你去了北京，平时联系不算频繁，
+                    但这份情谊从来没被距离冲淡，每次看到你丰富多彩的社团生活，我都打心底为你高兴。
+                    如今跨入新的阶段，
+                    愿你往后的每一天，都能奔赴热爱，
+                    甜甜蜜蜜，岁岁欢愉。
                     
                     老郭，新婚快乐！
                     我是孙慧，正在应急演练现场苦逼加班。借这个好日子，送上我的祝福。
@@ -1342,14 +1358,14 @@
                     devModal.classList.remove('hidden'); // 显示提示弹窗
                     
                     // ====== 👇 发布时删除下面这段代码 👇 ======
-                 /*   score = 52000;
+                    score = 52000;
                     over = true;
                     sd.innerText = "52000+";
                     sd.classList.add('win');
                     setTimeout(() => {
                         devModal.classList.add('hidden'); // 关闭弹窗
                         gotoPhase4(); 
-                    }, 1500); */
+                    }, 1500); 
                     // ====== 👆 发布时删除上面这段代码 👆 ======
                 });
 
