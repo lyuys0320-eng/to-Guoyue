@@ -251,7 +251,7 @@
         <!-- 开发专属：傲娇防跳过弹窗 -->
         <div id="dev-alert-modal" class="custom-modal hidden">
             <div class="custom-modal-content">
-                <p class="custom-modal-text">你是开发吗你就想跳过？？<br>你不是吕雅诗休想跳过这些祝福！<br>继续闯关hhhh</p>
+                <p class="custom-modal-text">你是开发吗你就想跳过？？<br>求助吕雅诗也没用！<br>请继续闯关</p>
                 <button type="button" id="dev-alert-close" class="custom-modal-btn">好叭，我继续玩</button>
             </div>
         </div>
@@ -339,7 +339,7 @@
                     平时也不这么煽情，太煽情的也说不来，但真的真的就是这样！
                     一个给周围人很多力量的人！
                     偶尔会自私地很希望我必须得是你最最最最好的朋友，没有之一！不然也是会吃醋的好吗
-		           但是恰恰是因为这样的你，也才有很多很多的朋友，也才给我带来这么多美好的回忆！（所以释怀了就）
+		            但是恰恰是因为这样的你，也才有很多很多的朋友，也才给我带来这么多美好的回忆！（所以释怀了就）
                      
                     之前你跟我说过：
                     “对待感情，轻松一点，不要想太多，不要太当回事，
@@ -348,7 +348,7 @@
                     这话同样送给结婚后、工作后的你，愿你对待婚姻、对待工作也能更好地关注自己的情绪和爱！
                     更好地爱杨峥、爱你们的家人，也更好地被他们爱~
 
-                    杨峥！谢谢之前旅途中的照顾和包容（包容有时候可能情商不够的我），
+                    杨峥！谢谢之前旅途中的照顾和包容，
 		            知识渊博、做事有原则（对你的最深刻的印象），
                     你和郭越互相都很适合对方，
                     你俩优点同时像星星和月亮又多又亮，完美情侣好吧，你俩让我又相信爱情了，模范！！
@@ -1585,8 +1585,15 @@
                                             }, 100);
                                         }).catch(error => {
                                             console.warn("阶段4背景音乐自动播放被浏览器拦截:", error);
-                                            // 备用方案：如果被拦截，尝试直接将音量设为1并等待用户下一次点击
+                                            // 终极备用方案：如果被拦截，将音量设为正常，并等待用户下一次任意点击唤醒
                                             phase4Bgm.volume = 1;
+                                            const forcePlay = () => {
+                                                phase4Bgm.play().catch(e=>{});
+                                                document.removeEventListener('click', forcePlay);
+                                                document.removeEventListener('touchstart', forcePlay);
+                                            };
+                                            document.addEventListener('click', forcePlay);
+                                            document.addEventListener('touchstart', forcePlay);
                                         });
                                     }
                                 }
@@ -1597,7 +1604,17 @@
                         phase4Bgm.volume = 1; 
                         let playPromise = phase4Bgm.play();
                         if (playPromise !== undefined) {
-                            playPromise.catch(e => console.warn("阶段4 BGM 播放失败", e));
+                            playPromise.catch(e => {
+                                console.warn("阶段4 BGM 播放失败", e);
+                                // 同样加上全屏点击唤醒
+                                const forcePlay = () => {
+                                    phase4Bgm.play().catch(err=>{});
+                                    document.removeEventListener('click', forcePlay);
+                                    document.removeEventListener('touchstart', forcePlay);
+                                };
+                                document.addEventListener('click', forcePlay);
+                                document.addEventListener('touchstart', forcePlay);
+                            });
                         }
                     }
 
