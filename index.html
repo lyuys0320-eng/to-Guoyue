@@ -270,7 +270,7 @@
             <div class="credits-content animate-credits">
                 <h3 class="credits-title">To GuoYue</h3>
                 <p class="credits-text">
-                    对我们来说，你就像小麦哲伦星云一样
+                   对我们来说，你就像小麦哲伦星云一样
                     散发着整个宇宙的光芒
                     帮助朋友找到方向
                     虽然你可能并没有意识到
@@ -319,7 +319,7 @@
                     杭州和上海很近，我们常见面多联系。
                     新的旅行，愿你三餐四季，温柔相伴，永远被爱包围，一路幸福~
 
-                     
+                    
 		            我还以为，我们刚刚才分别从斜对门的宿舍同时走了出来，
                     你穿着黑天鹅一样的裙子，眼神自信又明亮
                     又像才一起在图书馆写完电路理论的题
@@ -339,7 +339,7 @@
                     平时也不这么煽情，太煽情的也说不来，但真的真的就是这样！
                     一个给周围人很多力量的人！
                     偶尔会自私地很希望我必须得是你最最最最好的朋友，没有之一！不然也是会吃醋的好吗
-		            但是恰恰是因为这样的你，也才有很多很多的朋友，也才给我带来这么多美好的回忆！（所以释怀了就）
+		           但是恰恰是因为这样的你，也才有很多很多的朋友，也才给我带来这么多美好的回忆！（所以释怀了就）
                      
                     之前你跟我说过：
                     “对待感情，轻松一点，不要想太多，不要太当回事，
@@ -348,7 +348,7 @@
                     这话同样送给结婚后、工作后的你，愿你对待婚姻、对待工作也能更好地关注自己的情绪和爱！
                     更好地爱杨峥、爱你们的家人，也更好地被他们爱~
 
-                    杨峥！谢谢之前旅途中的照顾和包容，
+                    杨峥！谢谢之前旅途中的照顾和包容（包容有时候可能情商不够的我），
 		            知识渊博、做事有原则（对你的最深刻的印象），
                     你和郭越互相都很适合对方，
                     你俩优点同时像星星和月亮又多又亮，完美情侣好吧，你俩让我又相信爱情了，模范！！
@@ -769,7 +769,7 @@
             let uScene, uCamera, uRenderer, uGroup, uRaycaster, uMouse;
             let uCoreLight;
             let uIsZoomed = false;
-            let uCameraPosTarget = new THREE.Vector3(0, 0, 600); // 距离拉远，包容放大后的爱心
+            let uCameraPosTarget = new THREE.Vector3(0, 0, 600); 
             let uCameraLookTarget = new THREE.Vector3(0, 0, 0);
             let uCurrentLookAt = new THREE.Vector3(0, 0, 0);
             let uAniId;
@@ -785,7 +785,7 @@
             let tCvs, tCtx;
 
             let uCurrentTargetGroup = null; 
-            let uZoomOffset = 110; // 配合放大后的照片，将观看距离相应加长，以免撑爆屏幕
+            let uZoomOffset = 110; 
 
             const photoCount = UniversePhotoData.length;
             let uPhotoGroups = [];
@@ -830,7 +830,7 @@
                 context.fillText(line, x, currentY);
             }
 
-            // Fallback 材质生成 (防止本地图片加载失败时白屏)
+            // Fallback 材质生成
             function createFallbackTexture(title, desc) {
                 const canvas = document.createElement('canvas');
                 canvas.width = 600; canvas.height = 400;
@@ -882,15 +882,16 @@
                 tCvs.width = window.innerWidth; tCvs.height = window.innerHeight;
 
                 uScene = new THREE.Scene();
-                // 淡淡的雾气，增加深邃的高级感
-                uScene.fog = new THREE.FogExp2(0x0a0a20, 0.0015); 
+                // 降低雾气浓度，让照片更清晰不透明
+                uScene.fog = new THREE.FogExp2(0x0a0a20, 0.0005); 
 
                 uCamera = new THREE.PerspectiveCamera(60, window.innerWidth / window.innerHeight, 0.1, 3000);
                 uCamera.position.set(0, 0, 600); // 往后退以包容更大的爱心
 
                 uRenderer = new THREE.WebGLRenderer({ canvas: cvs, antialias: true, alpha: true });
                 uRenderer.setSize(window.innerWidth, window.innerHeight);
-                uRenderer.setPixelRatio(window.devicePixelRatio);
+                // 【优化】限制最高像素比，大幅降低手机端发热和掉帧
+                uRenderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
 
                 uGroup = new THREE.Group();
                 uScene.add(uGroup);
@@ -904,11 +905,11 @@
                 uScene.add(dirLight);
 
                 // 核心脉冲光源 (调弱亮度以显高级)
-                uCoreLight = new THREE.PointLight(0xff1493, 0.8, 400); // 亮粉色，亮度降至 0.8
+                uCoreLight = new THREE.PointLight(0xff1493, 0.8, 400); 
                 uCoreLight.position.set(0, 0, 0);
                 uScene.add(uCoreLight);
 
-                // --- 奢华星尘粒子生成 (数量适当增加，透明度降低) ---
+                // --- 奢华星尘粒子生成 ---
                 const starCvs = document.createElement('canvas');
                 starCvs.width = 32; starCvs.height = 32;
                 const starCtx = starCvs.getContext('2d');
@@ -923,17 +924,18 @@
                 starCtx.fill();
                 const starTexture = new THREE.CanvasTexture(starCvs);
 
+                const isMobile = window.innerWidth < 768; // 检测是否为移动端
+                
                 const starGeo = new THREE.BufferGeometry();
                 const starVerts = []; const starColors = [];
-                // 粒子总数适中，营造密集的星云效果
-                const totalParticles = 35000; 
+                // 【优化】移动端动态减少粒子数量，保证流畅
+                const totalParticles = isMobile ? 12000 : 35000; 
                 for(let i=0; i<totalParticles; i++) {
                     let x, y, z;
                     // 大部分粒子（80%）紧密聚拢在核心区域形成星云
                     if(Math.random() < 0.8) {
                         let u = Math.random(); let v = Math.random();
                         let theta = u * 2.0 * Math.PI; let phi = Math.acos(2.0 * v - 1.0);
-                        // r 使用更强的非线性分布，让更多粒子靠近中心
                         let r = Math.pow(Math.random(), 1.5) * 800; 
                         x = r * Math.sin(phi) * Math.cos(theta);
                         y = r * Math.sin(phi) * Math.sin(theta) * 0.5; 
@@ -946,7 +948,6 @@
 
                     const color = new THREE.Color();
                     const rand = Math.random();
-                    // 白色星尘与粉/金色轮廓粒子
                     if (rand < 0.4) color.setHex(0xffffff); // 白
                     else if (rand < 0.7) color.setHex(0xffb6c1); // 粉
                     else if (rand < 0.9) color.setHex(0xffd700); // 金
@@ -956,25 +957,32 @@
                 starGeo.setAttribute('position', new THREE.Float32BufferAttribute(starVerts, 3));
                 starGeo.setAttribute('color', new THREE.Float32BufferAttribute(starColors, 3));
                 const starMat = new THREE.PointsMaterial({
-                    size: 1.8, // 减小星星粒径
-                    transparent: true, opacity: 0.75, // 降低透明度让星云更柔和
+                    size: 1.8, 
+                    transparent: true, opacity: 0.75, 
                     vertexColors: true,
                     map: starTexture, depthWrite: false, blending: THREE.AdditiveBlending 
                 });
                 const stars = new THREE.Points(starGeo, starMat);
                 uGroup.add(stars); 
 
-                // --- 加载 34 张相片 (构建更大比例的3D爱心) ---
                 const textureLoader = new THREE.TextureLoader();
                 textureLoader.crossOrigin = "Anonymous"; 
                 
-                // 将爱心整体尺寸放大
                 const heartScale = 9.0; 
-                
+
+                // 【优化】提取共享几何体和材质，大幅减少内存占用和对象创建开销
+                const sharedImgGeo = new THREE.PlaneGeometry(24, 18);
+                const sharedBorderGeo = new THREE.PlaneGeometry(1, 1);
+                const sharedTGeo = new THREE.PlaneGeometry(24, 11.25);
+                const sharedHitGeo = new THREE.PlaneGeometry(36, 36);
+                const sharedBorderMat = new THREE.MeshStandardMaterial({ 
+                    color: 0xb76e79, metalness: 0.8, roughness: 0.2, side: THREE.DoubleSide 
+                });
+                const sharedHitMat = new THREE.MeshBasicMaterial({visible: false});
+
                 for(let i=0; i<photoCount; i++) {
                     const group = new THREE.Group();
                     
-                    // 基于斐波那契球面并映射到爱心形态
                     const phi = Math.acos(1 - 2 * (i + 0.5) / photoCount); 
                     const theta = Math.PI * (1 + Math.sqrt(5)) * i; 
 
@@ -982,7 +990,6 @@
                     let by = Math.cos(phi);
                     let bz = Math.sin(phi) * Math.sin(theta);
 
-                    // 数学形变：从球体变为爱心
                     let hx = bx * 18 * heartScale;
                     let hy = (by * 15 + Math.abs(bx) * 10 - 2) * heartScale;
                     let hz = bz * 10 * heartScale; 
@@ -990,37 +997,36 @@
                     group.userData.heartPos = new THREE.Vector3(hx, hy, hz);
                     group.position.copy(group.userData.heartPos);
                     
-                    // 照片在爱心形态下朝向法线外部
                     group.lookAt(hx * 2, hy * 2, hz * 2);
                     group.userData.heartQuat = group.quaternion.clone();
-                    // 记录它的初始爱心旋转状态，供退出专注模式时还原
                     group.userData.preZoomQuat = group.quaternion.clone();
                     
                     const photoData = UniversePhotoData[i];
 
-                    // 1. 照片正面 (改为 MeshBasicMaterial，还原真实色彩，绝对不受粉色光影响)
-                    const imgGeo = new THREE.PlaneGeometry(24, 18); // 照片尺寸整体放大 1.5 倍
+                    const fallbackTex = createFallbackTexture(photoData.title, photoData.desc);
+                    fallbackTex.generateMipmaps = false;
+                    fallbackTex.minFilter = THREE.LinearFilter;
+
+                    // 1. 照片正面 
                     const imgMat = new THREE.MeshBasicMaterial({ 
                         color: 0xffffff, side: THREE.FrontSide,
-                        map: createFallbackTexture(photoData.title, photoData.desc)
+                        map: fallbackTex,
+                        transparent: false, // 确保照片完全不透明
+                        opacity: 1.0
                     });
-                    const imgMesh = new THREE.Mesh(imgGeo, imgMat);
+                    const imgMesh = new THREE.Mesh(sharedImgGeo, imgMat);
                     group.add(imgMesh);
 
-                    // 2. 照片背面 (完全复制正面，翻转180度，背面也保持原色)
-                    const backImgMesh = new THREE.Mesh(imgGeo, imgMat);
+                    // 2. 照片背面
+                    const backImgMesh = new THREE.Mesh(sharedImgGeo, imgMat);
                     backImgMesh.rotation.y = Math.PI; 
-                    backImgMesh.position.z = -0.3; // 垫在金属边框之后
+                    backImgMesh.position.z = -0.3; 
                     group.add(backImgMesh);
 
-                    // 3. 玫瑰金金属外框 (位于两张照片中间，保留金属材质以吸收粉色环境光)
-                    const borderGeo = new THREE.PlaneGeometry(25.2, 19.2); // 同步放大边框
-                    const borderMat = new THREE.MeshStandardMaterial({ 
-                        color: 0xb76e79, // Rose Gold
-                        metalness: 0.8, roughness: 0.2, side: THREE.DoubleSide 
-                    });
-                    const borderMesh = new THREE.Mesh(borderGeo, borderMat);
-                    borderMesh.position.z = -0.15; // 夹心层
+                    // 3. 玫瑰金金属外框 
+                    const borderMesh = new THREE.Mesh(sharedBorderGeo, sharedBorderMat);
+                    borderMesh.scale.set(25.2, 19.2, 1); 
+                    borderMesh.position.z = -0.15; 
                     group.add(borderMesh);
 
                     // 4. 正面字体标签
@@ -1040,28 +1046,28 @@
                     wrapText(tCtx, photoData.desc, 256, 60, 480, 32);
 
                     const tTex = new THREE.CanvasTexture(tCvs);
-                    const tGeo = new THREE.PlaneGeometry(24, 11.25); // 同步放大文字面板
-                    const tMat = new THREE.MeshBasicMaterial({ map: tTex, transparent: true, side: THREE.FrontSide });
-                    const tMesh = new THREE.Mesh(tGeo, tMat);
-                    tMesh.position.y = - (18 / 2) - 6; // 配合大照片往下移
+                    tTex.generateMipmaps = false; // 【优化】禁用 Mipmap 防止文字贴图上传 GPU 导致掉帧卡顿
+                    tTex.minFilter = THREE.LinearFilter;
+
+                    const tMat = new THREE.MeshBasicMaterial({ map: tTex, transparent: true, opacity: 1.0, side: THREE.FrontSide });
+                    const tMesh = new THREE.Mesh(sharedTGeo, tMat);
+                    tMesh.position.y = - (18 / 2) - 6; 
                     group.add(tMesh);
 
-                    // 5. 背面字体标签 (防止背面的字是反的)
-                    const backTMesh = new THREE.Mesh(tGeo, tMat);
+                    // 5. 背面字体标签 
+                    const backTMesh = new THREE.Mesh(sharedTGeo, tMat); // 【优化】复用 tMat
                     backTMesh.rotation.y = Math.PI;
                     backTMesh.position.y = - (18 / 2) - 6;
                     backTMesh.position.z = -0.3;
                     group.add(backTMesh);
 
-                    // 6. 点击交互隐形检测面 (配合大照片扩大隐形检测区域，防止点不中)
-                    const hitGeo = new THREE.PlaneGeometry(36, 36);
-                    const hitMat = new THREE.MeshBasicMaterial({visible: false});
-                    const hitMesh = new THREE.Mesh(hitGeo, hitMat);
-                    hitMesh.position.z = 0.5; // 前移以提高精确度
+                    // 6. 点击交互隐形检测面 
+                    const hitMesh = new THREE.Mesh(sharedHitGeo, sharedHitMat);
+                    hitMesh.position.z = 0.5; 
                     group.add(hitMesh);
                     
-                    const backHitMesh = new THREE.Mesh(hitGeo, hitMat);
-                    backHitMesh.position.z = -0.8; // 背面也加一个检测面
+                    const backHitMesh = new THREE.Mesh(sharedHitGeo, sharedHitMat);
+                    backHitMesh.position.z = -0.8; 
                     backHitMesh.rotation.y = Math.PI;
                     group.add(backHitMesh);
 
@@ -1071,14 +1077,16 @@
                     });
 
                     if (photoData.url) {
-                        // 错峰排队加载
                         setTimeout(() => {
                             textureLoader.load(photoData.url, (tex) => { 
+                                tex.generateMipmaps = false; // 【优化】核心！禁止大图生成 Mipmap，极大加快加载速度并消除卡顿
+                                tex.minFilter = THREE.LinearFilter;
+                                
                                 imgMat.map = tex; 
                                 imgMat.needsUpdate = true; 
                                 
                                 const aspect = tex.image.width / tex.image.height;
-                                let w = 24, h = 24; // 动态自适应的大尺寸基准
+                                let w = 24, h = 24; 
                                 if (aspect >= 1) { h = 24 / aspect; } else { w = 24 * aspect; }
                                 
                                 imgMesh.scale.set(w / 24, h / 18, 1);
@@ -1086,8 +1094,8 @@
                                 hitMesh.scale.set(w / 24, h / 18, 1);
                                 backHitMesh.scale.set(w / 24, h / 18, 1);
                                 
-                                borderMesh.geometry.dispose();
-                                borderMesh.geometry = new THREE.PlaneGeometry(w + 1.2, h + 1.2);
+                                // 【优化】直接修改缩放，不重建几何体
+                                borderMesh.scale.set(w + 1.2, h + 1.2, 1);
                                 
                                 tMesh.position.y = -(h / 2) - 6; 
                                 backTMesh.position.y = -(h / 2) - 6; 
@@ -1149,10 +1157,8 @@
                     if(phase2.classList.contains('hidden')) return;
                     
                     if (!uIsZoomed) {
-                        // Delta < 0 意味着向上滚轮
                         if (e.deltaY < 0) { 
                             uExplosionTarget += 0.1;
-                            // 目标值 0~1：表示纯放大爱心；1~2：表示爆炸散落
                             if (uExplosionTarget > 2.2) {
                                 generateExplosionTargets(uPhotoGroups);
                                 uExplosionTarget = 2.0; 
@@ -1163,7 +1169,6 @@
                         }
                         uExplosionTarget = Math.max(0, Math.min(2.2, uExplosionTarget));
                     } else {
-                        // 专注状态：控制照片距离
                         uZoomOffset += e.deltaY * 0.08;
                         uZoomOffset = Math.max(30, Math.min(250, uZoomOffset)); 
                         
@@ -1182,7 +1187,6 @@
                     if (Math.abs(e.clientX - pointerStartX) > 5 || Math.abs(e.clientY - pointerStartY) > 5) return; 
 
                     if (uIsZoomed) {
-                        // 退出专注模式，相机退回原位，照片恢复原旋转角度
                         uIsZoomed = false;
                         document.getElementById('next-phase-btn-wrapper').classList.add('show');
                         sfx.play('catch');
@@ -1200,10 +1204,9 @@
                     // 只选取第一个命中的物体，防止误触背面的其他图片
                     let clickedObj = intersects.find(obj => obj.object.userData.isPhoto);
                     if(clickedObj) {
-                        // 进入专注模式
                         const targetGroup = clickedObj.object.userData.parentGroup;
                         uCurrentTargetGroup = targetGroup;
-                        uZoomOffset = 110; // 这里同步更新点击后相机后退的距离
+                        uZoomOffset = 110; 
 
                         const worldPos = new THREE.Vector3();
                         targetGroup.getWorldPosition(worldPos);
@@ -1259,25 +1262,21 @@
                 uAniId = requestAnimationFrame(animateUniverse);
                 const time = Date.now() * 0.001;
 
-                // 核心脉冲光源与心跳同步律动 (扑通...扑通...)
                 let heartbeat = 1 + 0.08 * Math.sin(time * 3) * Math.pow(Math.sin(time * 1.5), 2);
                 if(uCoreLight) {
                     uCoreLight.intensity = 0.8 * heartbeat;
                     uCoreLight.distance = 500 + 100 * heartbeat;
                 }
 
-                // 爆炸平滑过渡插值 Lerp
                 uExplosionProgress += (uExplosionTarget - uExplosionProgress) * 0.08;
                 const p = Math.max(0, uExplosionProgress); 
 
                 uPhotoGroups.forEach(g => {
-                    // 如果该相片正在被专注观看，停止它的呼吸和翻滚
                     if (uIsZoomed && g === uCurrentTargetGroup) return; 
 
-                    // p (0 -> 1) 是放大爱心；p (1 -> 2) 是炸开
                     let scale = 1.0;
                     if (p <= 1.0) {
-                        scale = 1.0 + p * 1.5; // 爱心放大到最高 2.5倍
+                        scale = 1.0 + p * 1.5; 
                     } else {
                         scale = 2.5; 
                     }
@@ -1285,17 +1284,14 @@
                     let basePos = g.userData.heartPos.clone().multiplyScalar(scale * heartbeat);
 
                     if (p <= 1.01) {
-                        // 阶段1：静静的 3D 巨型爱心
                         g.position.copy(basePos);
                         g.quaternion.copy(g.userData.heartQuat);
                     } else if (p > 1.99) {
-                        // 阶段2：完全炸开，零重力漂浮 + 翻滚
                         let floatY = Math.sin(time * 1.5 + g.userData.offset) * 3;
                         g.userData.currentExplodedPos.copy(g.userData.explodedPos).add(new THREE.Vector3(0, floatY, 0));
                         g.rotateOnAxis(g.userData.tumbleAxis, g.userData.tumbleSpeed);
                         g.position.copy(g.userData.currentExplodedPos);
                     } else {
-                        // 介于 1 和 2 之间：空间位置与四元数平滑爆开过渡
                         let explodeP = p - 1.0;
                         g.position.lerpVectors(basePos, g.userData.explodedPos, explodeP);
                         g.quaternion.slerpQuaternions(g.userData.heartQuat, g.userData.explodedQuat, explodeP);
@@ -1303,7 +1299,6 @@
                 });
 
                 if (!uIsZoomed) {
-                    // 随着爆炸进程，相机会稍微往后退一点以总览全局
                     let camDist = 600 + (p > 1 ? (p - 1) * 150 : 0);
                     uCameraPosTarget.set(
                         camDist * Math.sin(camRotY) * Math.cos(camRotX),
@@ -1313,12 +1308,10 @@
                     uCameraLookTarget.set(0, 0, 0);
                 }
 
-                // 相机运动缓动
                 uCamera.position.lerp(uCameraPosTarget, 0.08);
                 uCurrentLookAt.lerp(uCameraLookTarget, 0.08);
                 uCamera.lookAt(uCurrentLookAt);
 
-                // 星空缓慢旋转，增加宇宙深邃感（放大照片时暂停旋转，防止视线漂移）
                 if (!uIsZoomed) {
                     uGroup.rotation.y += 0.0005;
                 }
@@ -1558,33 +1551,54 @@
                     cancelAnimationFrame(aniId); window.removeEventListener('resize', resize);
                     phase3.style.opacity = '0';
                     
-                    // 修改点2配套逻辑：音乐平滑淡出淡入切换
+                    // 修改点：优化音乐平滑淡出淡入切换，增加浏览器兼容性和容错
                     const mainBgm = document.getElementById('bgm');
                     const phase4Bgm = document.getElementById('bgm-phase4');
                     
+                    // 确保音量初始值正确
+                    if(phase4Bgm) {
+                        phase4Bgm.volume = 0;
+                    }
+
                     if (mainBgm && !mainBgm.paused) {
+                        // 淡出第一首
                         let fadeOut = setInterval(() => {
                             if (mainBgm.volume > 0.1) {
-                                mainBgm.volume -= 0.1;
+                                mainBgm.volume = Math.max(0, mainBgm.volume - 0.1); // 防止浮点数误差导致报错
                             } else {
                                 clearInterval(fadeOut);
                                 mainBgm.pause();
+                                
+                                // 淡入第二首
                                 if (phase4Bgm) {
-                                    phase4Bgm.volume = 0;
-                                    phase4Bgm.play().catch(e => {});
-                                    let fadeIn = setInterval(() => {
-                                        if (phase4Bgm.volume < 0.9) {
-                                            phase4Bgm.volume += 0.1;
-                                        } else {
-                                            clearInterval(fadeIn);
+                                    // 核心修复：捕获播放Promise，处理浏览器自动播放限制
+                                    let playPromise = phase4Bgm.play();
+                                    if (playPromise !== undefined) {
+                                        playPromise.then(() => {
+                                            let fadeIn = setInterval(() => {
+                                                if (phase4Bgm.volume < 0.9) {
+                                                    phase4Bgm.volume = Math.min(1, phase4Bgm.volume + 0.1);
+                                                } else {
+                                                    clearInterval(fadeIn);
+                                                    phase4Bgm.volume = 1;
+                                                }
+                                            }, 100);
+                                        }).catch(error => {
+                                            console.warn("阶段4背景音乐自动播放被浏览器拦截:", error);
+                                            // 备用方案：如果被拦截，尝试直接将音量设为1并等待用户下一次点击
                                             phase4Bgm.volume = 1;
-                                        }
-                                    }, 100);
+                                        });
+                                    }
                                 }
                             }
                         }, 100);
                     } else if (phase4Bgm) {
-                        phase4Bgm.play().catch(e => {});
+                        // 如果第一首根本没播，直接尝试播第二首
+                        phase4Bgm.volume = 1; 
+                        let playPromise = phase4Bgm.play();
+                        if (playPromise !== undefined) {
+                            playPromise.catch(e => console.warn("阶段4 BGM 播放失败", e));
+                        }
                     }
 
                     setTimeout(() => { phase3.classList.add('hidden'); phase4.classList.remove('hidden'); requestAnimationFrame(() => { phase4.style.opacity = '1'; initPhase4Bouquet(); }); }, 1000);
