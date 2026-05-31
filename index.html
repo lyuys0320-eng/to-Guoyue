@@ -101,8 +101,8 @@
         }
         .interlude-btn:active { transform: scale(0.95); }
 
-        /* === 4. 阶段 2：3D深空宇宙照片墙 === */
-        #phase-2.phase-container { background: linear-gradient(135deg, #000000 0%, #000000 50%, #00081a 80%, #021a2e 100%); }
+        /* === 4. 阶段 2：3D深空宇宙照片墙（重置为深邃午夜蓝黑背景） === */
+        #phase-2.phase-container { background: linear-gradient(135deg, #050510 0%, #0a0a20 50%, #0d0d2a 100%); }
         #universe-canvas { display: block; width: 100%; height: 100%; position: absolute; top: 0; left: 0; z-index: 10; touch-action: none; cursor: grab;}
         #universe-canvas:active { cursor: grabbing; }
         
@@ -144,7 +144,12 @@
         .custom-modal-btn:active { transform: scale(0.95); }
 
         /* === 6. 阶段 4：片尾花海与字幕 === */
-        .flex-row-desktop { display: flex; flex-direction: column; overflow: hidden; background: rgba(255,255,255,0.3); }
+        #phase-4 { 
+            background-image: url('bg-phase4.jpg'); /* 修改点1：在此处更换最后一幕的手绘背景图，去掉渐变 */
+            background-size: cover; 
+            background-position: center; 
+        }
+        .flex-row-desktop { display: flex; flex-direction: column; overflow: hidden; background: transparent; }
         .credits-panel { position: relative; width: 100%; height: 33.333%; border-bottom: 1px solid rgba(56, 189, 248, 0.3); background: rgba(255,255,255,0.4); backdrop-filter: blur(12px); z-index: 20; display: flex; justify-content: center; pointer-events: none; }
         .bouquet-panel { position: relative; width: 100%; height: 66.666%; z-index: 10; }
         @media (min-width: 768px) { 
@@ -155,13 +160,12 @@
         .mask-vertical-fade { -webkit-mask-image: linear-gradient(to bottom, transparent 0%, black 15%, black 85%, transparent 100%); mask-image: linear-gradient(to bottom, transparent 0%, black 15%, black 85%, transparent 100%); }
         .credits-content { position: absolute; width: 100%; padding: 0 2rem; text-align: center; }
         
-        /* 🔥 修改点：更快出现，更平滑！使用 3d 硬件加速防止拖影 */
         @keyframes scrollCredits { 
             0% { transform: translate3d(0, 30%, 0); } 
             50% { transform: translate3d(0, -120%, 0); } 
         }
         .animate-credits { 
-            animation: scrollCredits 250s linear infinite; /* 100s保证极慢极平稳 */
+            animation: scrollCredits 250s linear infinite; 
             will-change: transform; 
             transform: translateZ(0); 
             -webkit-backface-visibility: hidden; 
@@ -180,6 +184,8 @@
     <div class="paper-texture"></div>
 
     <audio id="bgm" src="bgm.mp3" loop hidden preload="auto"></audio>
+    <!-- 修改点2：最后一幕专属的背景音乐，将音乐路径填入 src 中 -->
+    <audio id="bgm-phase4" src="phase4-bgm.mp3" loop hidden preload="auto"></audio>
 
     <canvas id="global-petals" class="absolute inset-0 pointer-events-none z-0 w-full h-full opacity-60" style="position: absolute; top: 0; left: 0; width: 100%; height: 100%; z-index: 0; opacity: 0.8;"></canvas>
 
@@ -221,11 +227,6 @@
         <!-- 鼠标拖尾专属画布层 -->
         <canvas id="star-trail-canvas"></canvas>
         <canvas id="universe-canvas"></canvas>
-        
-        <!-- 被注释掉的提示信息，不再显示 -->
-         <div id="phase-2-hints" class="universe-hints animate-pulse">
-                     <br>[Loading]<br><!--[有些事没有照片都可能忘了]<br>[儿子一定要幸福，其实不说我也知道你一定会幸福]-->
-        </div>
         
         <div id="next-phase-btn-wrapper" class="next-btn-wrap">
             <button type="button" id="next-phase-btn" class="next-btn">
@@ -274,6 +275,14 @@
                     帮助朋友找到方向
                     虽然你可能并没有意识到
 
+
+		            大虐，新婚快乐哟！
+	                一路走来，看着你如今终于找到了那个可以携手一生的人，
+                    感慨万千，也真心为你感到高兴！
+                    愿你们往后余生，互敬互爱，幸福美满，携手共度每一个春夏秋冬。
+                    千言万语汇成一句：一定要幸福哦！爱你mua～
+		 
+
                     张瑶：
                     我亲爱的室友，新婚快乐！
                     一晃毕业这么多年了，本科朝夕相伴的日子好像还历历在目。
@@ -290,6 +299,7 @@
                     愿你往后的每一天，都能奔赴热爱，
                     甜甜蜜蜜，岁岁欢愉。
                     
+
                     老郭，新婚快乐！
                     我是孙慧，正在应急演练现场苦逼加班。借这个好日子，送上我的祝福。
                     读研之后咱俩联系不多，但想起你就记起本科时一起上课、做大作业，
@@ -309,8 +319,8 @@
                     杭州和上海很近，我们常见面多联系。
                     新的旅行，愿你三餐四季，温柔相伴，永远被爱包围，一路幸福~
 
-
-                    我还以为，我们刚刚才分别从斜对门的宿舍同时走了出来，
+                     
+		            我还以为，我们刚刚才分别从斜对门的宿舍同时走了出来，
                     你穿着黑天鹅一样的裙子，眼神自信又明亮
                     又像才一起在图书馆写完电路理论的题
                     像才一起在李图边上拍完毕业照、
@@ -324,13 +334,26 @@
                     好像遥远又未知的阶段近在眼前了，恍惚又清醒
                     婚姻这件事情，对你也一定不在话下，它对你而言绝对不比任何一道物理题目难
                     而且每次跟你出去玩的经历，往后回忆起来也都是超级开心的
-                    说明你是个能量满满的人，给周围人带来快乐（呼应开头）
-                    请一定永远保持如此！！
+                    你可能真的不知道，我每次跟你出去玩的心情都很轻松很chill会忘记烦恼，
+                    而且每一个回忆起来都很棒，很少有人给我这样的感觉
+                    平时也不这么煽情，太煽情的也说不来，但真的真的就是这样！
+                    一个给周围人很多力量的人！
+                    偶尔会自私地很希望我必须得是你最最最最好的朋友，没有之一！不然也是会吃醋的好吗
+		            但是恰恰是因为这样的你，也才有很多很多的朋友，也才给我带来这么多美好的回忆！（所以释怀了就）
+                     
                     之前你跟我说过：
                     “对待感情，轻松一点，不要想太多，不要太当回事，
                     我想分享就分享，不想就不想，得不到回应就算了，
                     重点是，自己的情绪才是最重要的”
-                    这话同样送给结婚后的你，愿你对待婚姻也能更好地关注自己的情绪和爱！
+                    这话同样送给结婚后、工作后的你，愿你对待婚姻、对待工作也能更好地关注自己的情绪和爱！
+                    更好地爱杨峥、爱你们的家人，也更好地被他们爱~
+
+                    杨峥！谢谢之前旅途中的照顾和包容，
+		            知识渊博、做事有原则（对你的最深刻的印象），
+                    你和郭越互相都很适合对方，
+                    你俩优点同时像星星和月亮又多又亮，完美情侣好吧，你俩让我又相信爱情了，模范！！
+                    很开心很开心能成为你们爱情路上的电灯泡！！
+                    
                     
                 </p>
                 <div class="credits-code">
@@ -703,214 +726,58 @@
                 }, 1000);
             });
 
-            // ================= 阶段 2：3D深空宇宙照片隧道 =================
+
+            // ================= 阶段 2：3D深空宇宙照片墙 (全新: 立体奢华爱心 + 爆炸流星雨) =================
             
             const UniversePhotoData = [
-                 { 
-                    url: '48.jpg', 
-                    title: 'love', 
-                    desc: '祝福你俩！' 
-                },
-                { 
-                    url: '45.jpg', 
-                    title: 'love', 
-                    desc: '郭越美照！' 
-                },
-                 { 
-                    url: '47.jpg', 
-                    title: 'love', 
-                    desc: '郭越美照！' 
-                },
-                                 { 
-                    url: '41.jpg', 
-                    title: 'love', 
-                    desc: '郭越美照！' 
-                },
-                { 
-                    url: '46.jpg', 
-                    title: 'love', 
-                    desc: '杨峥帅照！' 
-                },
-                { 
-                    url: '43.jpg', 
-                    title: 'love', 
-                    desc: '祝福你俩！' 
-                },
-                                { 
-                    url: '44.jpg', 
-                    title: 'love', 
-                    desc: '祝福你俩！' 
-                },
-
-            { 
-                    url: '31.jpg', 
-                    title: '本科毕业拍的照片', 
-                    desc: '这张照片真的笑鼠我了,我们怎么会有这样的pose,是在干什么啊哈哈哈哈哈' 
-                },
-                { 
-                    url: '14.jpg', 
-                    title: '新图', 
-                    desc: '同样笑不活了哈哈哈哈什么pose啊hhh' 
-                },
-                { 
-                    url: '15.jpg', 
-                    title: '这是电院自己的毕业典礼时候拍的', 
-                    desc: '时间太仓促来不及翻2016年到毕业之间的照片' 
-                },
-                { 
-                    url: '20.jpg', 
-                    title: '这是东边哪座学院里的什么地方吧？', 
-                    desc: '我们真年轻啊！' 
-                },
-                { 
-                    url: '32.jpg', 
-                    title: '陆家嘴吧', 
-                    desc: '下午茶' 
-                },
-                    { 
-                    url: '30.jpg', 
-                    title: '这个就是那里', 
-                    desc: '你真可爱' 
-                },
-                                    { 
-                    url: '23.jpg', 
-                    title: '这个还是那里', 
-                    desc: '你真可爱' 
-                },
-                    { 
-                    url: '26.jpg', 
-                    title: '你学架子鼓的地方', 
-                    desc: '我真的超级喜欢那种下了班骑个小电驴找个地方学习敲鼓的感觉' 
-                },
-                { 
-                    url: '36.jpg', 
-                    title: '大理洱海啊啊啊啊！', 
-                    desc: '超级爱云南之旅!回忆起来嘴角根本压不住!' 
-                },
-                { 
-                    url: '29.jpg', 
-                    title: '丽江啊啊啊啊！', 
-                    desc: '这段旅程记一辈子' 
-                },
-                { 
-                    url: '22.jpg', 
-                     title: '丽江啊啊啊啊！', 
-                    desc: '这段旅程记一辈子' 
-                },
-                { 
-                    url: '24.jpg', 
-                     title: '泸沽湖', 
-                    desc: '摩梭族' 
-                },
-                { 
-                    url: '2.jpg', 
-                     title: '泸沽湖', 
-                    desc: '湖边酒瓶乒乒乓乓' 
-                },
-                { 
-                    url: '19.jpg', 
-                    title: '你给我编织的', 
-                    desc: '全部都好好的收着呢!真的超厉害' 
-                },
-                 { 
-                    url: '35.jpg', 
-                    title: '我的毕业典礼', 
-                    desc: '你们都来补了开心' 
-                },
-                { 
-                    url: '34.jpg', 
-                    title: '福建咯', 
-                    desc: '你和杨峥就是这段时间正式在一起的!欢呼' 
-                },
-                { 
-                    url: '18.jpg', 
-                    title: '工装郭', 
-                    desc: '这搭配真的可以,工装也是被你穿出style了' 
-                },
-                { 
-                    url: '6.jpg', 
-                    title: '加菲猫', 
-                    desc: '后来这个咖啡店我还经常去' 
-                },
-                 { 
-                    url: '8.jpg', 
-                    title: '浦西那个路', 
-                    desc: '这忘了干啥了，欢迎补充' 
-                },
-               { 
-                    url: '33.jpg', 
-                    title: '你的宿舍', 
-                    desc: '看电影聊天了,聊了些什么啊反正很多' 
-                },
-                { 
-                    url: '28.jpg', 
-                    title: '七彩甘南', 
-                    desc: '认识新朋友' 
-                },
-                { 
-                    url: '38.jpg', 
-                    title: '七彩甘南too', 
-                    desc: '回忆起来同样快乐' 
-                },
-                                { 
-                    url: '25.jpg', 
-                    title: '青山湖', 
-                    desc: '你给我抓了个好拍' 
-                },
-                                                { 
-                    url: '4.jpg', 
-                    title: '上海上海', 
-                    desc: '直播卖货hhh' 
-                },
-                { 
-                    url: '3.jpg', 
-                    title: '飞来峰哦', 
-                    desc: '这次内存卡没忘' 
-                },
-                { 
-                    url: '21.jpg', 
-                    title: '张瑶婚礼', 
-                    desc: '欢聚' 
-                },
-                { 
-                    url: '37.jpg', 
-                    title: '你们的婚礼', 
-                    desc: '我觉得超有感觉的照片' 
-                },
-               { 
-                    url: '1.jpg', 
-                    title: 'love', 
-                    desc: '祝福你俩！' 
-                },
-                { 
-                    url: '51.jpg', 
-                    title: 'love', 
-                    desc: '祝福你俩！' 
-                },
-                                { 
-                    url: '49.jpg', 
-                    title: 'love', 
-                    desc: '祝福你俩！' 
-                },
-                 { 
-                    url: '50.jpg', 
-                    title: 'love', 
-                    desc: '祝福你俩！' 
-                }
+                { url: '48.jpg', title: 'love', desc: '祝福你俩！' },
+                { url: '45.jpg', title: 'love', desc: '郭越美照！' },
+                { url: '47.jpg', title: 'love', desc: '郭越美照！' },
+                { url: '41.jpg', title: 'love', desc: '郭越美照！' },
+                { url: '46.jpg', title: 'love', desc: '杨峥帅照！' },
+                { url: '43.jpg', title: 'love', desc: '祝福你俩！' },
+                { url: '44.jpg', title: 'love', desc: '祝福你俩！' },
+                { url: '31.jpg', title: '本科毕业拍的照片', desc: '这张照片真的笑鼠我了,我们怎么会有这样的pose,是在干什么啊哈哈哈哈哈' },
+                { url: '14.jpg', title: '新图', desc: '同样笑不活了哈哈哈哈什么pose啊hhh' },
+                { url: '15.jpg', title: '这是电院自己的毕业典礼时候拍的', desc: '时间太仓促来不及翻2016年到毕业之间的照片' },
+                { url: '20.jpg', title: '这是东边哪座学院里的什么地方吧？', desc: '我们真年轻啊！' },
+                { url: '32.jpg', title: '陆家嘴吧', desc: '下午茶' },
+                { url: '30.jpg', title: '这个就是那里', desc: '你真可爱' },
+                { url: '23.jpg', title: '这个还是那里', desc: '你真可爱' },
+                { url: '26.jpg', title: '你学架子鼓的地方', desc: '我真的超级喜欢那种下了班骑个小电驴找个地方学习敲鼓的感觉' },
+                { url: '36.jpg', title: '大理洱海啊啊啊啊！', desc: '超级爱云南之旅!回忆起来嘴角根本压不住!' },
+                { url: '29.jpg', title: '丽江啊啊啊啊！', desc: '这段旅程记一辈子' },
+                { url: '22.jpg', title: '丽江啊啊啊啊！', desc: '这段旅程记一辈子' },
+                { url: '24.jpg', title: '泸沽湖', desc: '摩梭族' },
+                { url: '2.jpg', title: '泸沽湖', desc: '湖边酒瓶乒乒乓乓' },
+                { url: '19.jpg', title: '你给我编织的', desc: '全部都好好的收着呢!真的超厉害' },
+                { url: '35.jpg', title: '我的毕业典礼', desc: '你们都来补了开心' },
+                { url: '34.jpg', title: '福建咯', desc: '你和杨峥就是这段时间正式在一起的!欢呼' },
+                { url: '18.jpg', title: '工装郭', desc: '这搭配真的可以,工装也是被你穿出style了' },
+                { url: '6.jpg', title: '加菲猫', desc: '后来这个咖啡店我还经常去' },
+                { url: '8.jpg', title: '浦西那个路', desc: '这忘了干啥了，欢迎补充' },
+                { url: '33.jpg', title: '你的宿舍', desc: '看电影聊天了,聊了些什么啊反正很多' },
+                { url: '28.jpg', title: '七彩甘南', desc: '认识新朋友' },
+                { url: '38.jpg', title: '七彩甘南too', desc: '回忆起来同样快乐' },
+                { url: '25.jpg', title: '青山湖', desc: '你给我抓了个好拍' },
+                { url: '4.jpg', title: '上海上海', desc: '直播卖货hhh' },
+                { url: '3.jpg', title: '飞来峰哦', desc: '这次内存卡没忘' },
+                { url: '21.jpg', title: '张瑶婚礼', desc: '欢聚' },
+                { url: '37.jpg', title: '你们的婚礼', desc: '我觉得超有感觉的照片' }
             ];
 
             let uScene, uCamera, uRenderer, uGroup, uRaycaster, uMouse;
+            let uCoreLight;
             let uIsZoomed = false;
-            let uCameraPosTarget = new THREE.Vector3(0, 0, 0);
-            let uCameraLookTarget = new THREE.Vector3(0, 0, -1);
-            let uCurrentLookAt = new THREE.Vector3(0, 0, -1);
+            let uCameraPosTarget = new THREE.Vector3(0, 0, 600); // 距离拉远，包容放大后的爱心
+            let uCameraLookTarget = new THREE.Vector3(0, 0, 0);
+            let uCurrentLookAt = new THREE.Vector3(0, 0, 0);
             let uAniId;
 
             let isDragging = false;
             let prevPointer = { x: 0, y: 0 };
             let camRotX = 0;
             let camRotY = 0;
-            let targetCameraZ = 0; 
             let pointerStartX = 0;
             let pointerStartY = 0;
             
@@ -918,10 +785,12 @@
             let tCvs, tCtx;
 
             let uCurrentTargetGroup = null; 
-            let uZoomOffset = 45; 
+            let uZoomOffset = 110; // 配合放大后的照片，将观看距离相应加长，以免撑爆屏幕
 
-            const photoCount = 60; 
-            const zSpacing = 45;
+            const photoCount = UniversePhotoData.length;
+            let uPhotoGroups = [];
+            let uExplosionTarget = 0; 
+            let uExplosionProgress = 0;
 
             function initPhase2() {
                 phase2.style.opacity = '0';
@@ -941,32 +810,68 @@
                 });
             }
 
+            // 文本换行工具
+            function wrapText(context, text, x, y, maxWidth, lineHeight) {
+                let words = text.split('');
+                let line = '';
+                let currentY = y;
+                for(let n = 0; n < words.length; n++) {
+                    let testLine = line + words[n];
+                    let metrics = context.measureText(testLine);
+                    let testWidth = metrics.width;
+                    if (testWidth > maxWidth && n > 0) {
+                        context.fillText(line, x, currentY);
+                        line = words[n];
+                        currentY += lineHeight;
+                    } else {
+                        line = testLine;
+                    }
+                }
+                context.fillText(line, x, currentY);
+            }
+
+            // Fallback 材质生成 (防止本地图片加载失败时白屏)
             function createFallbackTexture(title, desc) {
                 const canvas = document.createElement('canvas');
                 canvas.width = 600; canvas.height = 400;
                 const ctx = canvas.getContext('2d');
                 
                 const grad = ctx.createLinearGradient(0, 0, 600, 400);
-                grad.addColorStop(0, '#1e1b4b');
-                grad.addColorStop(1, '#0f172a');
-                ctx.fillStyle = grad;
-                ctx.fillRect(0, 0, 600, 400);
-
-                ctx.fillStyle = '#a855f7';
-                ctx.beginPath();
-                ctx.arc(300, 150, 50, 0, Math.PI * 2);
-                ctx.fill();
-
-                ctx.fillStyle = '#e0e7ff';
-                ctx.font = 'bold 42px "Kaiti", "STKaiti", serif';
-                ctx.textAlign = 'center'; ctx.textBaseline = 'middle';
-                ctx.fillText(title, 300, 240);
-
-                ctx.fillStyle = '#94a3b8';
-                ctx.font = '24px sans-serif';
-                ctx.fillText(desc, 300, 310);
-
+                grad.addColorStop(0, '#1e1b4b'); grad.addColorStop(1, '#0f172a');
+                ctx.fillStyle = grad; ctx.fillRect(0, 0, 600, 400);
+                ctx.fillStyle = '#a855f7'; ctx.beginPath(); ctx.arc(300, 150, 50, 0, Math.PI * 2); ctx.fill();
+                ctx.fillStyle = '#e0e7ff'; ctx.font = 'bold 42px "Kaiti", "STKaiti", serif';
+                ctx.textAlign = 'center'; ctx.textBaseline = 'middle'; ctx.fillText(title, 300, 240);
+                ctx.fillStyle = '#94a3b8'; ctx.font = '24px sans-serif'; ctx.fillText(desc, 300, 310);
                 return new THREE.CanvasTexture(canvas);
+            }
+
+            // 重新计算生成无规则的爆炸点
+            function generateExplosionTargets(groups) {
+                groups.forEach(g => {
+                    let r = Math.random() * 500 + 250; 
+                    let theta = Math.random() * Math.PI * 2;
+                    let phi = Math.acos((Math.random() * 2) - 1);
+                    
+                    g.userData.explodedPos = new THREE.Vector3(
+                        r * Math.sin(phi) * Math.cos(theta),
+                        r * Math.sin(phi) * Math.sin(theta),
+                        r * Math.cos(phi)
+                    );
+                    
+                    let euler = new THREE.Euler(
+                        Math.random() * Math.PI * 2,
+                        Math.random() * Math.PI * 2,
+                        Math.random() * Math.PI * 2
+                    );
+                    g.userData.explodedQuat = new THREE.Quaternion().setFromEuler(euler);
+                    
+                    if (!g.userData.currentExplodedPos) g.userData.currentExplodedPos = new THREE.Vector3();
+                    
+                    g.userData.tumbleAxis = new THREE.Vector3(Math.random(), Math.random(), Math.random()).normalize();
+                    g.userData.tumbleSpeed = (Math.random() - 0.5) * 0.015;
+                    g.userData.offset = Math.random() * 100; // 用于漂浮的正弦偏移
+                });
             }
 
             function initUniverse() {
@@ -974,14 +879,14 @@
                 
                 tCvs = document.getElementById('star-trail-canvas');
                 tCtx = tCvs.getContext('2d');
-                tCvs.width = window.innerWidth;
-                tCvs.height = window.innerHeight;
+                tCvs.width = window.innerWidth; tCvs.height = window.innerHeight;
 
                 uScene = new THREE.Scene();
-                uScene.fog = new THREE.FogExp2(0x020617, 0.003); 
+                // 淡淡的雾气，增加深邃的高级感
+                uScene.fog = new THREE.FogExp2(0x0a0a20, 0.0015); 
 
                 uCamera = new THREE.PerspectiveCamera(60, window.innerWidth / window.innerHeight, 0.1, 3000);
-                uCamera.position.set(0, 0, 0);
+                uCamera.position.set(0, 0, 600); // 往后退以包容更大的爱心
 
                 uRenderer = new THREE.WebGLRenderer({ canvas: cvs, antialias: true, alpha: true });
                 uRenderer.setSize(window.innerWidth, window.innerHeight);
@@ -990,6 +895,20 @@
                 uGroup = new THREE.Group();
                 uScene.add(uGroup);
 
+                // --- 环境光效 ---
+                const ambientLight = new THREE.AmbientLight(0xffffff, 0.6);
+                uScene.add(ambientLight);
+                
+                const dirLight = new THREE.DirectionalLight(0xffeedd, 0.8);
+                dirLight.position.set(100, 200, 150);
+                uScene.add(dirLight);
+
+                // 核心脉冲光源 (调弱亮度以显高级)
+                uCoreLight = new THREE.PointLight(0xff1493, 0.8, 400); // 亮粉色，亮度降至 0.8
+                uCoreLight.position.set(0, 0, 0);
+                uScene.add(uCoreLight);
+
+                // --- 奢华星尘粒子生成 (数量适当增加，透明度降低) ---
                 const starCvs = document.createElement('canvas');
                 starCvs.width = 32; starCvs.height = 32;
                 const starCtx = starCvs.getContext('2d');
@@ -1005,181 +924,206 @@
                 const starTexture = new THREE.CanvasTexture(starCvs);
 
                 const starGeo = new THREE.BufferGeometry();
-                const starVerts = [];
-                const starColors = [];
-                for(let i=0; i<8000; i++) {
+                const starVerts = []; const starColors = [];
+                // 粒子总数适中，营造密集的星云效果
+                const totalParticles = 35000; 
+                for(let i=0; i<totalParticles; i++) {
                     let x, y, z;
-                    if(Math.random() < 0.6) {
-                        let u = Math.random();
-                        let v = Math.random();
-                        let theta = u * 2.0 * Math.PI;
-                        let phi = Math.acos(2.0 * v - 1.0);
-                        let r = Math.pow(Math.random(), 1/3) * 2000;
+                    // 大部分粒子（80%）紧密聚拢在核心区域形成星云
+                    if(Math.random() < 0.8) {
+                        let u = Math.random(); let v = Math.random();
+                        let theta = u * 2.0 * Math.PI; let phi = Math.acos(2.0 * v - 1.0);
+                        // r 使用更强的非线性分布，让更多粒子靠近中心
+                        let r = Math.pow(Math.random(), 1.5) * 800; 
                         x = r * Math.sin(phi) * Math.cos(theta);
-                        y = r * Math.sin(phi) * Math.sin(theta) * 0.15; 
+                        y = r * Math.sin(phi) * Math.sin(theta) * 0.5; 
                         z = r * Math.cos(phi);
                     } else {
-                        x = (Math.random()-0.5)*3000;
-                        y = (Math.random()-0.5)*3000;
-                        z = (Math.random()-0.5)*3000;
+                        // 少量散落的背景星光
+                        x = (Math.random()-0.5)*3000; y = (Math.random()-0.5)*3000; z = (Math.random()-0.5)*3000;
                     }
                     starVerts.push(x, y, z);
 
                     const color = new THREE.Color();
                     const rand = Math.random();
-                    if (rand < 0.2) color.setHex(0x0891b2); 
-                    else if (rand < 0.4) color.setHex(0xb45309); 
-                    else if (rand < 0.6) color.setHex(0x1e3a8a); 
-                    else if (rand < 0.8) color.setHex(0x22d3ee); 
-                    else color.setHex(0xffffff); 
+                    // 白色星尘与粉/金色轮廓粒子
+                    if (rand < 0.4) color.setHex(0xffffff); // 白
+                    else if (rand < 0.7) color.setHex(0xffb6c1); // 粉
+                    else if (rand < 0.9) color.setHex(0xffd700); // 金
+                    else color.setHex(0x8888aa); // 暗银
                     starColors.push(color.r, color.g, color.b);
                 }
                 starGeo.setAttribute('position', new THREE.Float32BufferAttribute(starVerts, 3));
                 starGeo.setAttribute('color', new THREE.Float32BufferAttribute(starColors, 3));
                 const starMat = new THREE.PointsMaterial({
-                    size: 4, 
-                    transparent: true, 
-                    opacity: 0.9, 
+                    size: 1.8, // 减小星星粒径
+                    transparent: true, opacity: 0.75, // 降低透明度让星云更柔和
                     vertexColors: true,
-                    map: starTexture, 
-                    depthWrite: false, 
-                    blending: THREE.AdditiveBlending 
+                    map: starTexture, depthWrite: false, blending: THREE.AdditiveBlending 
                 });
                 const stars = new THREE.Points(starGeo, starMat);
                 uGroup.add(stars); 
 
+                // --- 加载 34 张相片 (构建更大比例的3D爱心) ---
                 const textureLoader = new THREE.TextureLoader();
                 textureLoader.crossOrigin = "Anonymous"; 
                 
-                const radiusBaseX = 42; 
-                const radiusBaseY = 28; 
-                const thickness = 10; 
+                // 将爱心整体尺寸放大
+                const heartScale = 9.0; 
                 
                 for(let i=0; i<photoCount; i++) {
                     const group = new THREE.Group();
                     
-                    const z = -60 - (i * zSpacing); 
-                    const angle = i * 0.65; 
+                    // 基于斐波那契球面并映射到爱心形态
+                    const phi = Math.acos(1 - 2 * (i + 0.5) / photoCount); 
+                    const theta = Math.PI * (1 + Math.sqrt(5)) * i; 
+
+                    let bx = Math.sin(phi) * Math.cos(theta);
+                    let by = Math.cos(phi);
+                    let bz = Math.sin(phi) * Math.sin(theta);
+
+                    // 数学形变：从球体变为爱心
+                    let hx = bx * 18 * heartScale;
+                    let hy = (by * 15 + Math.abs(bx) * 10 - 2) * heartScale;
+                    let hz = bz * 10 * heartScale; 
+
+                    group.userData.heartPos = new THREE.Vector3(hx, hy, hz);
+                    group.position.copy(group.userData.heartPos);
                     
-                    const currentRadiusX = radiusBaseX + (Math.random() - 0.5) * thickness;
-                    const currentRadiusY = radiusBaseY + (Math.random() - 0.5) * thickness;
+                    // 照片在爱心形态下朝向法线外部
+                    group.lookAt(hx * 2, hy * 2, hz * 2);
+                    group.userData.heartQuat = group.quaternion.clone();
+                    // 记录它的初始爱心旋转状态，供退出专注模式时还原
+                    group.userData.preZoomQuat = group.quaternion.clone();
                     
-                    const x = currentRadiusX * Math.cos(angle);
-                    const y = currentRadiusY * Math.sin(angle);
+                    const photoData = UniversePhotoData[i];
 
-                    group.position.set(x, y, z);
-                    group.lookAt(x * 0.1, y * 0.1, z + 300);
-
-                    const photoData = UniversePhotoData[i] || {
-                        url: '', 
-                        title: `时光碎片 第 ${i+1} 幕`,
-                        desc: '愿这些光芒闪耀在时光长河中...'
-                    };
-
-                    const imgGeo = new THREE.PlaneGeometry(16, 12);
-                    const imgMat = new THREE.MeshBasicMaterial({ color: 0xffffff, side: THREE.DoubleSide });
-                    
-                    imgMat.map = createFallbackTexture(photoData.title, photoData.desc); 
-
+                    // 1. 照片正面 (改为 MeshBasicMaterial，还原真实色彩，绝对不受粉色光影响)
+                    const imgGeo = new THREE.PlaneGeometry(24, 18); // 照片尺寸整体放大 1.5 倍
+                    const imgMat = new THREE.MeshBasicMaterial({ 
+                        color: 0xffffff, side: THREE.FrontSide,
+                        map: createFallbackTexture(photoData.title, photoData.desc)
+                    });
                     const imgMesh = new THREE.Mesh(imgGeo, imgMat);
                     group.add(imgMesh);
 
-                    const edgeGeo = new THREE.EdgesGeometry(imgGeo);
-                    const edgeMat = new THREE.LineBasicMaterial({ color: 0xffffff, linewidth: 2 });
-                    const edgeLine = new THREE.LineSegments(edgeGeo, edgeMat);
-                    group.add(edgeLine);
+                    // 2. 照片背面 (完全复制正面，翻转180度，背面也保持原色)
+                    const backImgMesh = new THREE.Mesh(imgGeo, imgMat);
+                    backImgMesh.rotation.y = Math.PI; 
+                    backImgMesh.position.z = -0.3; // 垫在金属边框之后
+                    group.add(backImgMesh);
 
+                    // 3. 玫瑰金金属外框 (位于两张照片中间，保留金属材质以吸收粉色环境光)
+                    const borderGeo = new THREE.PlaneGeometry(25.2, 19.2); // 同步放大边框
+                    const borderMat = new THREE.MeshStandardMaterial({ 
+                        color: 0xb76e79, // Rose Gold
+                        metalness: 0.8, roughness: 0.2, side: THREE.DoubleSide 
+                    });
+                    const borderMesh = new THREE.Mesh(borderGeo, borderMat);
+                    borderMesh.position.z = -0.15; // 夹心层
+                    group.add(borderMesh);
+
+                    // 4. 正面字体标签
                     const tCvs = document.createElement('canvas');
-                    tCvs.width = 512; tCvs.height = 160;
+                    tCvs.width = 512; tCvs.height = 240; 
                     const tCtx = tCvs.getContext('2d');
-                    tCtx.fillStyle = 'transparent'; tCtx.fillRect(0,0,512,160);
+                    tCtx.fillStyle = 'transparent'; tCtx.fillRect(0,0,512,240);
                     
                     tCtx.fillStyle = '#fde047'; 
-                    tCtx.font = 'bold 42px Kaiti';
-                    tCtx.textAlign = 'center'; tCtx.textBaseline = 'middle';
-                    tCtx.shadowColor = 'rgba(0,0,0,0.8)'; tCtx.shadowBlur = 6;
-                    tCtx.fillText(photoData.title, 256, 50);
+                    tCtx.font = 'bold 36px "PingFang SC", "Helvetica Neue", sans-serif';
+                    tCtx.textAlign = 'center'; tCtx.textBaseline = 'top';
+                    tCtx.shadowColor = 'rgba(0,0,0,0.9)'; tCtx.shadowBlur = 6;
+                    tCtx.fillText(photoData.title, 256, 10);
                     
                     tCtx.fillStyle = '#e0e7ff';
-                    tCtx.font = '28px Kaiti';
-                    tCtx.fillText(`📝 ${photoData.desc}`, 256, 110);
+                    tCtx.font = 'bold 22px "PingFang SC", "Helvetica Neue", sans-serif';
+                    wrapText(tCtx, photoData.desc, 256, 60, 480, 32);
 
                     const tTex = new THREE.CanvasTexture(tCvs);
-                    const tGeo = new THREE.PlaneGeometry(16, 5);
-                    const tMat = new THREE.MeshBasicMaterial({ map: tTex, transparent: true, side: THREE.DoubleSide });
+                    const tGeo = new THREE.PlaneGeometry(24, 11.25); // 同步放大文字面板
+                    const tMat = new THREE.MeshBasicMaterial({ map: tTex, transparent: true, side: THREE.FrontSide });
                     const tMesh = new THREE.Mesh(tGeo, tMat);
+                    tMesh.position.y = - (18 / 2) - 6; // 配合大照片往下移
                     group.add(tMesh);
 
-                    let fbHeight = 16 / 1.5; 
-                    imgMesh.scale.set(1, fbHeight / 12, 1);
-                    edgeLine.scale.set(1, fbHeight / 12, 1);
-                    tMesh.position.y = (fbHeight / 2) + 3.5;
+                    // 5. 背面字体标签 (防止背面的字是反的)
+                    const backTMesh = new THREE.Mesh(tGeo, tMat);
+                    backTMesh.rotation.y = Math.PI;
+                    backTMesh.position.y = - (18 / 2) - 6;
+                    backTMesh.position.z = -0.3;
+                    group.add(backTMesh);
 
-                   if (photoData.url) {
-                        // 【修改点：加入错峰延迟加载机制，排队加载防止网络塞车】
-                        setTimeout(() => {
-                            textureLoader.load(
-                                photoData.url, 
-                                (tex) => { 
-                                    imgMat.map = tex; 
-                                    imgMat.needsUpdate = true; 
-                                    
-                                    const aspect = tex.image.width / tex.image.height;
-                                    let w = 16, h = 16;
-                                    if (aspect >= 1) {
-                                        h = 16 / aspect;
-                                    } else {
-                                        w = 16 * aspect;
-                                    }
-                                    
-                                    imgMesh.scale.set(w / 16, h / 12, 1);
-                                    edgeLine.scale.set(w / 16, h / 12, 1);
-                                    tMesh.position.y = (h / 2) + 3.5; 
-                                },
-                                undefined, 
-                                (err) => { console.error("图片加载失败：", err); } 
-                            );
-                        }, i * 200); // 核心秘诀：每张照片延迟 200 毫秒依次加载 (i * 200)
-                    }
-
-                    const hitGeo = new THREE.PlaneGeometry(22, 22);
+                    // 6. 点击交互隐形检测面 (配合大照片扩大隐形检测区域，防止点不中)
+                    const hitGeo = new THREE.PlaneGeometry(36, 36);
                     const hitMat = new THREE.MeshBasicMaterial({visible: false});
                     const hitMesh = new THREE.Mesh(hitGeo, hitMat);
-                    hitMesh.userData = { isPhoto: true, parentGroup: group };
+                    hitMesh.position.z = 0.5; // 前移以提高精确度
                     group.add(hitMesh);
+                    
+                    const backHitMesh = new THREE.Mesh(hitGeo, hitMat);
+                    backHitMesh.position.z = -0.8; // 背面也加一个检测面
+                    backHitMesh.rotation.y = Math.PI;
+                    group.add(backHitMesh);
 
+                    // 🌟将照片所有层统一打上标记，彻底解决点不开的Bug
+                    [imgMesh, backImgMesh, borderMesh, tMesh, backTMesh, hitMesh, backHitMesh].forEach(mesh => {
+                        mesh.userData = { isPhoto: true, parentGroup: group };
+                    });
+
+                    if (photoData.url) {
+                        // 错峰排队加载
+                        setTimeout(() => {
+                            textureLoader.load(photoData.url, (tex) => { 
+                                imgMat.map = tex; 
+                                imgMat.needsUpdate = true; 
+                                
+                                const aspect = tex.image.width / tex.image.height;
+                                let w = 24, h = 24; // 动态自适应的大尺寸基准
+                                if (aspect >= 1) { h = 24 / aspect; } else { w = 24 * aspect; }
+                                
+                                imgMesh.scale.set(w / 24, h / 18, 1);
+                                backImgMesh.scale.set(w / 24, h / 18, 1);
+                                hitMesh.scale.set(w / 24, h / 18, 1);
+                                backHitMesh.scale.set(w / 24, h / 18, 1);
+                                
+                                borderMesh.geometry.dispose();
+                                borderMesh.geometry = new THREE.PlaneGeometry(w + 1.2, h + 1.2);
+                                
+                                tMesh.position.y = -(h / 2) - 6; 
+                                backTMesh.position.y = -(h / 2) - 6; 
+                            }, undefined, () => { /* 忽略错误 */ });
+                        }, i * 150); 
+                    }
+
+                    uPhotoGroups.push(group);
                     uGroup.add(group);
                 }
+
+                // 首次计算爆炸目标坐标
+                generateExplosionTargets(uPhotoGroups);
 
                 uRaycaster = new THREE.Raycaster();
                 uMouse = new THREE.Vector2();
 
+                // === 鼠标交互逻辑 ===
                 window.addEventListener('pointermove', (e) => {
                     if(phase2.classList.contains('hidden')) return;
 
                     for(let i=0; i<3; i++){
                         uTrails.push({
-                            x: e.clientX + (Math.random()-0.5)*15,
-                            y: e.clientY + (Math.random()-0.5)*15,
-                            vx: (Math.random()-0.5)*1.5,
-                            vy: (Math.random()-0.5)*1.5 + 0.5,
-                            life: 1,
-                            size: Math.random()*2.5 + 1
+                            x: e.clientX + (Math.random()-0.5)*15, y: e.clientY + (Math.random()-0.5)*15,
+                            vx: (Math.random()-0.5)*1.5, vy: (Math.random()-0.5)*1.5 + 0.5,
+                            life: 1, size: Math.random()*2.5 + 1
                         });
                     }
 
                     if(isDragging && !uIsZoomed) {
                         const deltaX = e.clientX - prevPointer.x;
                         const deltaY = e.clientY - prevPointer.y;
-                        
                         camRotY -= deltaX * 0.003; 
                         camRotX += deltaY * 0.003; 
-                        
-                        const maxPitch = 0.25; 
-                        const maxYaw = 0.35;   
+                        const maxPitch = 0.5; 
                         camRotX = Math.max(-maxPitch, Math.min(maxPitch, camRotX)); 
-                        camRotY = Math.max(-maxYaw, Math.min(maxYaw, camRotY)); 
-                        
                         prevPointer = { x: e.clientX, y: e.clientY };
                     }
                     
@@ -1191,8 +1135,7 @@
                 cvs.addEventListener('pointerdown', (e) => {
                     isDragging = true;
                     prevPointer = { x: e.clientX, y: e.clientY };
-                    pointerStartX = e.clientX;
-                    pointerStartY = e.clientY;
+                    pointerStartX = e.clientX; pointerStartY = e.clientY;
                     try { cvs.setPointerCapture(e.pointerId); } catch(err){}
                 });
 
@@ -1201,14 +1144,28 @@
                     try { cvs.releasePointerCapture(e.pointerId); } catch(err){}
                 });
 
+                // ★ 滚轮核心逻辑：先放大爱心，再爆炸
                 window.addEventListener('wheel', (e) => {
+                    if(phase2.classList.contains('hidden')) return;
+                    
                     if (!uIsZoomed) {
-                        targetCameraZ -= e.deltaY * 0.5;
-                        const maxDepth = -100 - (photoCount * zSpacing) + 200;
-                        targetCameraZ = Math.max(maxDepth, Math.min(100, targetCameraZ));
+                        // Delta < 0 意味着向上滚轮
+                        if (e.deltaY < 0) { 
+                            uExplosionTarget += 0.1;
+                            // 目标值 0~1：表示纯放大爱心；1~2：表示爆炸散落
+                            if (uExplosionTarget > 2.2) {
+                                generateExplosionTargets(uPhotoGroups);
+                                uExplosionTarget = 2.0; 
+                                uExplosionProgress = 1.85; 
+                            }
+                        } else {
+                            uExplosionTarget -= 0.1;
+                        }
+                        uExplosionTarget = Math.max(0, Math.min(2.2, uExplosionTarget));
                     } else {
-                        uZoomOffset += e.deltaY * 0.05;
-                        uZoomOffset = Math.max(15, Math.min(120, uZoomOffset)); 
+                        // 专注状态：控制照片距离
+                        uZoomOffset += e.deltaY * 0.08;
+                        uZoomOffset = Math.max(30, Math.min(250, uZoomOffset)); 
                         
                         if (uCurrentTargetGroup) {
                             const worldPos = new THREE.Vector3();
@@ -1220,47 +1177,53 @@
                     }
                 });
 
-                cvs.addEventListener('dblclick', (e) => {
-                    if (uIsZoomed) return;
-                    targetCameraZ = 0;
-                    camRotX = 0;
-                    camRotY = 0;
-                });
-
+                // 点击图片/空白交互
                 cvs.addEventListener('click', (e) => {
                     if (Math.abs(e.clientX - pointerStartX) > 5 || Math.abs(e.clientY - pointerStartY) > 5) return; 
 
                     if (uIsZoomed) {
+                        // 退出专注模式，相机退回原位，照片恢复原旋转角度
                         uIsZoomed = false;
-                        uCameraPosTarget.set(0, 0, targetCameraZ);
                         document.getElementById('next-phase-btn-wrapper').classList.add('show');
                         sfx.play('catch');
+                        
+                        if (uCurrentTargetGroup && uCurrentTargetGroup.userData.preZoomQuat) {
+                            uCurrentTargetGroup.quaternion.copy(uCurrentTargetGroup.userData.preZoomQuat);
+                        }
+                        uCurrentTargetGroup = null;
                         return;
                     }
 
                     uRaycaster.setFromCamera(uMouse, uCamera);
                     const intersects = uRaycaster.intersectObjects(uGroup.children, true);
                     
-                    for(let i=0; i<intersects.length; i++) {
-                        if (intersects[i].object.userData.isPhoto) {
-                            const targetGroup = intersects[i].object.userData.parentGroup;
-                            const worldPos = new THREE.Vector3();
-                            targetGroup.getWorldPosition(worldPos);
+                    // 只选取第一个命中的物体，防止误触背面的其他图片
+                    let clickedObj = intersects.find(obj => obj.object.userData.isPhoto);
+                    if(clickedObj) {
+                        // 进入专注模式
+                        const targetGroup = clickedObj.object.userData.parentGroup;
+                        uCurrentTargetGroup = targetGroup;
+                        uZoomOffset = 110; // 这里同步更新点击后相机后退的距离
 
-                            uCurrentTargetGroup = targetGroup;
-                            uZoomOffset = 45; 
+                        const worldPos = new THREE.Vector3();
+                        targetGroup.getWorldPosition(worldPos);
 
-                            const dir = new THREE.Vector3(0, 0, 1).applyQuaternion(targetGroup.quaternion);
-                            const targetPos = worldPos.clone().add(dir.multiplyScalar(uZoomOffset));
+                        // ★ 强制完美面对相机：使用四元数矩阵反算，绝对平视，不留任何死角
+                        targetGroup.userData.preZoomQuat = targetGroup.quaternion.clone();
+                        const invParentQuat = uGroup.quaternion.clone().invert();
+                        const camQuat = uCamera.quaternion.clone();
+                        targetGroup.quaternion.copy(invParentQuat.multiply(camQuat));
+                        targetGroup.rotateY(Math.PI);
 
-                            uCameraPosTarget.copy(targetPos);
-                            uCameraLookTarget.copy(worldPos).add(new THREE.Vector3(0, 2, 0)); 
-                            
-                            uIsZoomed = true;
-                            document.getElementById('next-phase-btn-wrapper').classList.remove('show');
-                            sfx.play('bubble'); 
-                            break;
-                        }
+                        const dir = new THREE.Vector3(0, 0, 1).applyQuaternion(targetGroup.quaternion).applyQuaternion(uGroup.quaternion);
+                        const targetPos = worldPos.clone().add(dir.multiplyScalar(uZoomOffset));
+
+                        uCameraPosTarget.copy(targetPos);
+                        uCameraLookTarget.copy(worldPos); 
+                        
+                        uIsZoomed = true;
+                        document.getElementById('next-phase-btn-wrapper').classList.remove('show');
+                        sfx.play('bubble'); 
                     }
                 });
 
@@ -1268,8 +1231,7 @@
                     uCamera.aspect = window.innerWidth / window.innerHeight;
                     uCamera.updateProjectionMatrix();
                     uRenderer.setSize(window.innerWidth, window.innerHeight);
-                    tCvs.width = window.innerWidth;
-                    tCvs.height = window.innerHeight;
+                    tCvs.width = window.innerWidth; tCvs.height = window.innerHeight;
                 });
 
                 animateUniverse();
@@ -1295,19 +1257,71 @@
 
             function animateUniverse() {
                 uAniId = requestAnimationFrame(animateUniverse);
+                const time = Date.now() * 0.001;
 
-                if (!uIsZoomed) {
-                    uCameraPosTarget.z = targetCameraZ;
-                    uCameraLookTarget.set(
-                        uCameraPosTarget.x + 100 * Math.sin(camRotY) * Math.cos(camRotX),
-                        uCameraPosTarget.y + 100 * Math.sin(camRotX),
-                        uCameraPosTarget.z - 100 * Math.cos(camRotY) * Math.cos(camRotX)
-                    );
+                // 核心脉冲光源与心跳同步律动 (扑通...扑通...)
+                let heartbeat = 1 + 0.08 * Math.sin(time * 3) * Math.pow(Math.sin(time * 1.5), 2);
+                if(uCoreLight) {
+                    uCoreLight.intensity = 0.8 * heartbeat;
+                    uCoreLight.distance = 500 + 100 * heartbeat;
                 }
 
+                // 爆炸平滑过渡插值 Lerp
+                uExplosionProgress += (uExplosionTarget - uExplosionProgress) * 0.08;
+                const p = Math.max(0, uExplosionProgress); 
+
+                uPhotoGroups.forEach(g => {
+                    // 如果该相片正在被专注观看，停止它的呼吸和翻滚
+                    if (uIsZoomed && g === uCurrentTargetGroup) return; 
+
+                    // p (0 -> 1) 是放大爱心；p (1 -> 2) 是炸开
+                    let scale = 1.0;
+                    if (p <= 1.0) {
+                        scale = 1.0 + p * 1.5; // 爱心放大到最高 2.5倍
+                    } else {
+                        scale = 2.5; 
+                    }
+
+                    let basePos = g.userData.heartPos.clone().multiplyScalar(scale * heartbeat);
+
+                    if (p <= 1.01) {
+                        // 阶段1：静静的 3D 巨型爱心
+                        g.position.copy(basePos);
+                        g.quaternion.copy(g.userData.heartQuat);
+                    } else if (p > 1.99) {
+                        // 阶段2：完全炸开，零重力漂浮 + 翻滚
+                        let floatY = Math.sin(time * 1.5 + g.userData.offset) * 3;
+                        g.userData.currentExplodedPos.copy(g.userData.explodedPos).add(new THREE.Vector3(0, floatY, 0));
+                        g.rotateOnAxis(g.userData.tumbleAxis, g.userData.tumbleSpeed);
+                        g.position.copy(g.userData.currentExplodedPos);
+                    } else {
+                        // 介于 1 和 2 之间：空间位置与四元数平滑爆开过渡
+                        let explodeP = p - 1.0;
+                        g.position.lerpVectors(basePos, g.userData.explodedPos, explodeP);
+                        g.quaternion.slerpQuaternions(g.userData.heartQuat, g.userData.explodedQuat, explodeP);
+                    }
+                });
+
+                if (!uIsZoomed) {
+                    // 随着爆炸进程，相机会稍微往后退一点以总览全局
+                    let camDist = 600 + (p > 1 ? (p - 1) * 150 : 0);
+                    uCameraPosTarget.set(
+                        camDist * Math.sin(camRotY) * Math.cos(camRotX),
+                        camDist * Math.sin(camRotX),
+                        camDist * Math.cos(camRotY) * Math.cos(camRotX)
+                    );
+                    uCameraLookTarget.set(0, 0, 0);
+                }
+
+                // 相机运动缓动
                 uCamera.position.lerp(uCameraPosTarget, 0.08);
                 uCurrentLookAt.lerp(uCameraLookTarget, 0.08);
                 uCamera.lookAt(uCurrentLookAt);
+
+                // 星空缓慢旋转，增加宇宙深邃感（放大照片时暂停旋转，防止视线漂移）
+                if (!uIsZoomed) {
+                    uGroup.rotation.y += 0.0005;
+                }
 
                 uRenderer.render(uScene, uCamera);
                 drawTrails();
@@ -1358,14 +1372,14 @@
                     devModal.classList.remove('hidden'); // 显示提示弹窗
                     
                     // ====== 👇 发布时删除下面这段代码 👇 ======
-                  /*  score = 52000;
+                    score = 52000;
                     over = true;
                     sd.innerText = "52000+";
                     sd.classList.add('win');
                     setTimeout(() => {
                         devModal.classList.add('hidden'); // 关闭弹窗
                         gotoPhase4(); 
-                    }, 1500); */
+                    }, 1500); 
                     // ====== 👆 发布时删除上面这段代码 👆 ======
                 });
 
@@ -1543,6 +1557,36 @@
                 function gotoPhase4() {
                     cancelAnimationFrame(aniId); window.removeEventListener('resize', resize);
                     phase3.style.opacity = '0';
+                    
+                    // 修改点2配套逻辑：音乐平滑淡出淡入切换
+                    const mainBgm = document.getElementById('bgm');
+                    const phase4Bgm = document.getElementById('bgm-phase4');
+                    
+                    if (mainBgm && !mainBgm.paused) {
+                        let fadeOut = setInterval(() => {
+                            if (mainBgm.volume > 0.1) {
+                                mainBgm.volume -= 0.1;
+                            } else {
+                                clearInterval(fadeOut);
+                                mainBgm.pause();
+                                if (phase4Bgm) {
+                                    phase4Bgm.volume = 0;
+                                    phase4Bgm.play().catch(e => {});
+                                    let fadeIn = setInterval(() => {
+                                        if (phase4Bgm.volume < 0.9) {
+                                            phase4Bgm.volume += 0.1;
+                                        } else {
+                                            clearInterval(fadeIn);
+                                            phase4Bgm.volume = 1;
+                                        }
+                                    }, 100);
+                                }
+                            }
+                        }, 100);
+                    } else if (phase4Bgm) {
+                        phase4Bgm.play().catch(e => {});
+                    }
+
                     setTimeout(() => { phase3.classList.add('hidden'); phase4.classList.remove('hidden'); requestAnimationFrame(() => { phase4.style.opacity = '1'; initPhase4Bouquet(); }); }, 1000);
                 }
 
